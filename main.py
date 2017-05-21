@@ -38,6 +38,16 @@ class AgHaritalamaFrame(Frame):
         self.btn_ArpTara = Button(self, text="Mac / Arp Tara", command = self.btn_ArpTara_Tik)
         self.btn_ArpTara.grid(columnspan=2)
 
+
+        self.lbl_PingAraci = Label(self, text="IP veya Hostname :")
+        self.lbl_PingAraci.grid(row=4, sticky=NW)
+
+        self.entry_IPveyaHost = Entry(self)
+        self.entry_IPveyaHost.grid(row=4, column=1)
+
+        self.btn_PingAraci = Button(self, text="Ping", command = self.btn_PingAraci_Tik)
+        self.btn_PingAraci.grid(columnspan=4)
+
         self.pack()
 
     def btn_PortTara_Tik(self):
@@ -46,6 +56,10 @@ class AgHaritalamaFrame(Frame):
 
     def btn_ArpTara_Tik(self):
         print("Mac / Arp Tarama \n")
+
+    def btn_PingAraci_Tik(self):
+        print("Ping Araci \n")
+
 
 def main():
     root = Tk()
