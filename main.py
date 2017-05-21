@@ -1,22 +1,34 @@
 from socket import *
 from tkinter import *
 import tkinter.messagebox as tm
+from threading import Thread
 
 class AgHaritalama():
     def portTarama(ip_adres):
         print ("Port Tarama Basladi {0}".format(ip_adres))
         hedefIP = ip_adres
         portlar = [22, 23, 25, 53, 80, 443, 3389] #yaygin portlar ftp, telnet, smtp, dns, http, https, rdp
-        acikPortlar=''
+        thread_listesi = []
         for i in portlar:
-            s = socket(AF_INET, SOCK_STREAM)
-            sonuc = s.connect_ex((hedefIP, i))
-            print ('%d Port taraniyor..' % i)
-            if(sonuc == 0) :
-                print ('Port %d: ACIK' % i)
-                acikPortlar+='Port %d: ACIK\n' % i
-                s.close()
-        tm.showinfo("Port Tarama Sonuclari", acikPortlar)
+            t = Thread(target=AgHaritalama.portTaramaThread, args=(hedefIP,i,))
+            t.daemon = True
+            thread_listesi.append(t)
+
+        for t in thread_listesi:
+            t.start()
+
+    def portTaramaThread(hedefIP,port):
+        s = socket(AF_INET, SOCK_STREAM)
+        sonuc = s.connect_ex((hedefIP, port))
+        print ('%d Port taraniyor..' % port)
+        if(sonuc == 0) :
+            print ('Port %d: ACIK' % port)
+            tm.showinfo("Port Tarama Sonuclari", "Port %d: ACIK\n" % port)
+            s.close()
+        else:
+            print ('Port %d: KAPALI' % port)
+            s.close()
+
 
 class AgHaritalamaFrame(Frame):
     def __init__(self, master):
@@ -52,7 +64,10 @@ class AgHaritalamaFrame(Frame):
 
     def btn_PortTara_Tik(self):
         ipadres=self.entry_IPAdres.get()
-        AgHaritalama.portTarama(ipadres)
+        t=Thread(target=AgHaritalama.portTarama, args=(ipadres,))
+        t.daemon=True
+        t.start()
+        #AgHaritalama.portTarama(ipadres)
 
     def btn_ArpTara_Tik(self):
         print("Mac / Arp Tarama \n")
