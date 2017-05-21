@@ -26,17 +26,26 @@ class AgHaritalamaFrame(Frame):
 
         self.entry_IPAdres = Entry(self)
 
-        self.lbl_IPAdres.grid(row=0, sticky=E)
+        self.lbl_IPAdres.grid(row=0, sticky=NW)
         self.entry_IPAdres.grid(row=0, column=1)
 
         self.btn_PortTara = Button(self, text="Port Tara", command = self.btn_PortTara_Tik)
         self.btn_PortTara.grid(columnspan=2)
+
+        self.lbl_ArpTara = Label(self, text="Mac / Arp Tarama")
+        self.lbl_ArpTara.grid(row=2, sticky=NW)
+
+        self.btn_ArpTara = Button(self, text="Mac / Arp Tara", command = self.btn_ArpTara_Tik)
+        self.btn_ArpTara.grid(columnspan=2)
 
         self.pack()
 
     def btn_PortTara_Tik(self):
         ipadres=self.entry_IPAdres.get()
         AgHaritalama.portTarama(ipadres)
+
+    def btn_ArpTara_Tik(self):
+        print("Mac / Arp Tarama \n")
 
 def main():
     root = Tk()
