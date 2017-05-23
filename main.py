@@ -2,6 +2,7 @@ from socket import *
 from tkinter import *
 import tkinter.messagebox as tm
 from threading import Thread
+import subprocess
 
 class AgHaritalama():
     def portTarama(ip_adres):
@@ -28,6 +29,15 @@ class AgHaritalama():
         else:
             print ('Port %d: KAPALI' % port)
             s.close()
+
+    def pingAraci(ip):
+        try:
+            sonuc = subprocess.check_output("ping " + ip)
+            if sonuc != 0:
+                tm.showinfo("Ping Sonuclari",sonuc.decode('unicode_escape').encode('utf-8'))
+        except:
+            tm.showinfo("Ping Sonuclari","IP Bulunamadi !")
+
 
 
 class AgHaritalamaFrame(Frame):
@@ -73,7 +83,10 @@ class AgHaritalamaFrame(Frame):
         print("Mac / Arp Tarama \n")
 
     def btn_PingAraci_Tik(self):
-        print("Ping Araci \n")
+        ipadres=self.entry_IPveyaHost.get()
+        t=Thread(target=AgHaritalama.pingAraci, args=(ipadres,))
+        t.daemon=True
+        t.start()
 
 
 def main():
