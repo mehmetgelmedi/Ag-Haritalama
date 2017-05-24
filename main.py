@@ -38,6 +38,16 @@ class AgHaritalama():
         except:
             tm.showinfo("Ping Sonuclari","IP Bulunamadi !")
 
+    def arpTara(gateway):
+        try:
+            #10.39.168.1
+            print (""+gateway) 
+            sonuc = subprocess.check_output("python2 arpmac.py " + gateway)
+            sonuc = sonuc.decode('unicode_escape').encode('utf-8')
+            tm.showinfo("Ag Haritalama",sonuc)
+        except:
+            tm.showinfo("Ag Haritalama","Bir hata olustu!")
+        #tm.showinfo("Mac / Arp Sonuclari",bilgi)
 
 
 class AgHaritalamaFrame(Frame):
@@ -54,8 +64,11 @@ class AgHaritalamaFrame(Frame):
         self.btn_PortTara = Button(self, text="Port Tara", command = self.btn_PortTara_Tik)
         self.btn_PortTara.grid(columnspan=2)
 
-        self.lbl_ArpTara = Label(self, text="Mac / Arp Tarama")
+        self.lbl_ArpTara = Label(self, text="Ag Gecidi :")
         self.lbl_ArpTara.grid(row=2, sticky=NW)
+
+        self.entry_Gateway = Entry(self)
+        self.entry_Gateway.grid(row=2, column=1)
 
         self.btn_ArpTara = Button(self, text="Mac / Arp Tara", command = self.btn_ArpTara_Tik)
         self.btn_ArpTara.grid(columnspan=2)
@@ -80,7 +93,10 @@ class AgHaritalamaFrame(Frame):
         #AgHaritalama.portTarama(ipadres)
 
     def btn_ArpTara_Tik(self):
-        print("Mac / Arp Tarama \n")
+        varsayilanAgGecidi = self.entry_Gateway.get()
+        t=Thread(target=AgHaritalama.arpTara, args=(varsayilanAgGecidi,))
+        t.daemon=True
+        t.start()
 
     def btn_PingAraci_Tik(self):
         ipadres=self.entry_IPveyaHost.get()
